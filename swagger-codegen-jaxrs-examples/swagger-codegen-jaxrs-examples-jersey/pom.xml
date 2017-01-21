@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.josephmasini.swagger</groupId>
+        <artifactId>swagger-codegen-jaxrs-examples</artifactId>
+        <version>0.3</version>
+    </parent>
+
+    <artifactId>swagger-codegen-jaxrs-examples-jersey</artifactId>
+    <version>0.3</version>
+    <packaging>jar</packaging>
+
+    <name>Swagger Codegen JAXRS Examples Jersey</name>
+
+    <properties>
+        <spring.boot.version>1.4.2.RELEASE</spring.boot.version>
+        <api.package>com.josephmasini.swagger.codegen.jaxrs.examples.jersey</api.package>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring.boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-jersey</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>${spring.boot.version}</version>
+            </plugin>
+            <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <version>${swagger.io.codegen.version}</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/src/main/resources/swagger/api.yaml</inputSpec>
+                            <apiPackage>${api.package}.service</apiPackage>
+                            <modelPackage>${api.package}.service.model</modelPackage>
+                            <invokerPackage>${api.package}.invoker</invokerPackage>
+                            <language>com.josephmasini.swagger.codegen.jaxrs.spec.ext.core.JavaJAXRSSpecServerExtendedCodegen
+                            </language>
+                            <configOptions>
+                                <sourceFolder>src/main/java</sourceFolder>
+                            </configOptions>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>com.josephmasini.swagger</groupId>
+                        <artifactId>swagger-codegen-jaxrs-2.0</artifactId>
+                        <version>${swagger.generator.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

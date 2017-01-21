@@ -1,0 +1,55 @@
+swagger: '2.0'
+info:
+  title: Uber API
+  description: Move your app forward with the Uber API
+  version: "1.0.0"
+
+schemes:
+  - http
+
+basePath: /v1
+
+produces:
+  - application/json
+
+produces:
+  - application/json
+
+paths:
+  /messages:
+    get:
+      summary: Messages List
+      description: Get the current messages.
+      tags:
+        - Messages
+      responses:
+        200:
+          description: An array of messages
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Message'
+    post:
+      summary: Messages Post
+      description: Post a new message.
+      parameters:
+        - name: message
+          in: formData
+          description: The message to be posted.
+          required: true
+          type: string
+      tags:
+        - Messages
+      responses:
+        201:
+          description: Adding message successful
+
+definitions:
+  Message:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      message:
+        type: string

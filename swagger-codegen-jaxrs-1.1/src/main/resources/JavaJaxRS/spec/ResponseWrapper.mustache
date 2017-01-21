@@ -1,0 +1,57 @@
+package {{apiPackage}};
+
+import javax.ws.rs.core.*;
+import java.lang.annotation.Annotation;
+import java.net.URI;
+import java.util.Date;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+
+{{>generatedAnnotation}}
+public abstract class ResponseWrapper extends Response {
+
+private final Response response;
+
+protected ResponseWrapper(final Response response) {
+
+this.response = response;
+}
+
+@Override
+public int getStatus() {
+
+return response.getStatus();
+}
+
+@Override
+public Object getEntity() {
+
+return response.getEntity();
+}
+
+@Override
+public MultivaluedMap
+<String, Object> getMetadata() {
+
+return response.getMetadata();
+}
+
+@Override
+public int hashCode() {
+
+return response.hashCode();
+}
+
+@Override
+public boolean equals(final Object obj) {
+
+return response.equals(obj);
+}
+
+@Override
+public String toString() {
+
+return response.toString();
+}
+}

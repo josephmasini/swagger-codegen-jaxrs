@@ -1,0 +1,85 @@
+package {{package}};
+
+{{#imports}}import {{import}};
+{{/imports}}
+
+import javax.ws.rs.*;
+import javax.ws.rs.core.Response;
+
+import io.swagger.annotations.*;
+
+import java.util.List;
+
+import {{package}}.ResponseWrapper;
+
+{{>generatedAnnotation}}
+
+@Path("/{{baseName}}")
+@Api(description = "the {{baseName}} API")
+{{#hasConsumes}}@Consumes({ {{#consumes}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/consumes}} }){{/hasConsumes}}
+{{#hasProduces}}@Produces({ {{#produces}}"{{{mediaType}}}"{{#hasMore}}, {{/hasMore}}{{/produces}} }){{/hasProduces}}
+public interface {{classname}} {
+{{#operations}}
+    {{#operation}}
+
+        @{{httpMethod}}
+        {{#subresourceOperation}}@Path("{{path}}"){{/subresourceOperation}}
+        {{#hasConsumes}}@Consumes({ {{#consumes}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/consumes}} }){{/hasConsumes}}
+        {{#hasProduces}}@Produces({ {{#produces}}"{{mediaType}}"{{#hasMore}}, {{/hasMore}}{{/produces}} }){{/hasProduces}}
+        @ApiOperation(value = "{{{summary}}}", notes = "{{{notes}}}"{{#returnType}}, response = {{{returnType}}}.class{{/returnType}}{{#returnContainer}}, responseContainer = "{{{returnContainer}}}"{{/returnContainer}}{{#hasAuthMethods}}, authorizations = {
+        {{#authMethods}}@Authorization(value = "{{name}}"{{#isOAuth}}, scopes = {
+        {{#scopes}}@AuthorizationScope(scope = "{{scope}}", description = "{{description}}"){{#hasMore}},
+        {{/hasMore}}{{/scopes}}
+        }{{/isOAuth}}){{#hasMore}},
+        {{/hasMore}}{{/authMethods}}
+        }{{/hasAuthMethods}}, tags={ {{#vendorExtensions.x-tags}}"{{tag}}"{{#hasMore}}, {{/hasMore}}{{/vendorExtensions.x-tags}} })
+        @ApiResponses(value = { {{#responses}}
+            @ApiResponse(code = {{{code}}}, message = "{{{message}}}"{{#returnType}}, response = {{{returnType}}}.class{{/returnType}}{{#returnContainer}}, responseContainer = "{{{returnContainer}}}"{{/returnContainer}}){{#hasMore}},{{/hasMore}}{{/responses}} })
+        {{operationIdUpperCase}}Response {{nickname}}({{#allParams}}{{>queryParams}}{{>pathParams}}{{>headerParams}}{{>bodyParams}}{{>formParams}}{{#hasMore}},{{/hasMore}}{{/allParams}});
+    {{/operation}}
+    {{#operation}}
+
+        /**
+        * Response wrapper class for method {@link {{classname}}#{{nickname}}({{returnType}})}.
+        */
+        public class {{operationIdUpperCase}}Response extends ResponseWrapper {
+
+        private {{operationIdUpperCase}}Response(final Response response) {
+        super(response);
+        }
+        {{#responses}}
+            {{#hasNoReturnType}}
+
+                /**
+                * {{message}}
+                *
+                * @return response with code {{code}}{{#hasCodeFriendlyName}} ({{codeFriendlyName}}){{/hasCodeFriendlyName}}
+                */
+                public static {{operationIdUpperCase}}Response with{{#hasCodeFriendlyName}}{{codeFriendlyName}}{{/hasCodeFriendlyName}}{{#hasNoCodeFriendlyName}}{{code}}{{/hasNoCodeFriendlyName}}() {
+                return new {{operationIdUpperCase}}Response(Response.status({{code}}).build());
+                }
+            {{/hasNoReturnType}}
+            {{#hasReturnType}}
+                {{#hasProduces}}
+                    {{#produces}}
+
+                        /**
+                        * {{message}}
+                        *
+                        * @param entity an entity of type {{returnType}} to be sent with the response
+                        * @return response with code {{code}}{{#hasCodeFriendlyName}} ({{codeFriendlyName}}){{/hasCodeFriendlyName}} and with an entity of type {@link {{returnType}}.class} as content type {{mediaType}}
+                        */
+                        public static {{operationIdUpperCase}}Response with{{#hasCodeFriendlyName}}{{codeFriendlyName}}{{/hasCodeFriendlyName}}{{#hasNoCodeFriendlyName}}{{code}}{{/hasNoCodeFriendlyName}}As{{friendlyName}}(final {{#isArray}}List<{{/isArray}}{{returnType}}{{#isArray}}>{{/isArray}} entity) {
+                        return new {{operationIdUpperCase}}Response(Response.status({{code}})
+                        .header("Content-Type", "{{mediaType}}")
+                        .entity(entity)
+                        .build());
+                        }
+                    {{/produces}}
+                {{/hasProduces}}
+            {{/hasReturnType}}
+        {{/responses}}
+        }
+    {{/operation}}
+    }
+{{/operations}}
